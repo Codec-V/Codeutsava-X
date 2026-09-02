@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import styles from "./CyberDinoGame.module.css";
 
 interface CyberDinoGameProps {
@@ -61,7 +61,9 @@ export function CyberDinoGame({ onClose }: CyberDinoGameProps) {
       if (saved) {
         stateRef.current.highScore = parseInt(saved, 10) || 0;
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, []);
 
   // Lightweight Web Audio synthesizer
@@ -112,7 +114,9 @@ export function CyberDinoGame({ onClose }: CyberDinoGameProps) {
         osc.start(now);
         osc.stop(now + 0.42);
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, []);
 
   // Jump Action Handler
@@ -276,7 +280,9 @@ export function CyberDinoGame({ onClose }: CyberDinoGameProps) {
           s.highScore = curScoreInt;
           try {
             localStorage.setItem("codeutsava_dino_hi", curScoreInt.toString());
-          } catch {}
+          } catch {
+            // ignore
+          }
         }
 
         // Obstacle Spawner (Firmly Grounded Cacti & Trees)

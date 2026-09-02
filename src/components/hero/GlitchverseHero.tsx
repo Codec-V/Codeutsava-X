@@ -93,7 +93,9 @@ export function GlitchverseHero() {
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + 0.2);
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, [isGameMode, isMobileDevice]);
 
   const getNextGameName = () => {

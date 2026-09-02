@@ -188,7 +188,9 @@ export function CyberBrickBreaker({ onClose }: CyberBrickBreakerProps) {
           o.stop(now + i * 0.07 + 0.16);
         });
       }
-    } catch {}
+    } catch {
+      // Intentionally ignored
+    }
   }, []);
 
   // Initialize Bricks Grid (55% Width Coverage with Pixel-Perfect Alignment)
@@ -706,8 +708,7 @@ export function CyberBrickBreaker({ onClose }: CyberBrickBreakerProps) {
             ) {
               if (!isFireballActive) {
                 const prevX = ball.x - ball.vx * timeScale;
-                const prevY = ball.y - ball.vy * timeScale;
-
+                
                 if (prevX + ball.radius <= br.x || prevX - ball.radius >= br.x + br.w) {
                   ball.vx = -ball.vx;
                 } else {
@@ -901,10 +902,9 @@ export function CyberBrickBreaker({ onClose }: CyberBrickBreakerProps) {
   }, [initBricks, playSound]);
 
   // Touch / Mobile Detection for Android
-  const [isTouch, setIsTouch] = useState(false);
-  useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
-  }, []);
+  const [isTouch] = useState(() => 
+    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  );
 
   // Handle touch drag on mobile
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -923,12 +923,20 @@ export function CyberBrickBreaker({ onClose }: CyberBrickBreakerProps) {
     <div
       className={styles.gameContainer}
       ref={containerRef}
-      role="region"
+      role="button"
+      tabIndex={0}
       aria-label="Cyber Horizontal Ball & Brick Breaker Game"
       onTouchMove={isTouch ? handleTouchMove : undefined}
       onClick={() => {
         if (stateRef.current.gameState !== "playing") {
           launchGame();
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (stateRef.current.gameState !== "playing") {
+            launchGame();
+          }
         }
       }}
     >
