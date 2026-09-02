@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import styles from "./CyberSpaceshipGame.module.css";
 
 interface CyberSpaceshipGameProps {
@@ -82,7 +82,9 @@ export function CyberSpaceshipGame({ onClose }: CyberSpaceshipGameProps) {
       if (saved) {
         stateRef.current.highScore = parseInt(saved, 10) || 0;
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, []);
 
   // Web Audio Synth for Lasers & Explosions
@@ -153,7 +155,9 @@ export function CyberSpaceshipGame({ onClose }: CyberSpaceshipGameProps) {
         osc.start(now);
         osc.stop(now + 0.42);
       }
-    } catch {}
+    } catch {
+      // ignore
+    }
   }, []);
 
   // Fire Laser Action
@@ -476,7 +480,9 @@ export function CyberSpaceshipGame({ onClose }: CyberSpaceshipGameProps) {
                   s.highScore = curTotal;
                   try {
                     localStorage.setItem("codeutsava_spaceship_hi", curTotal.toString());
-                  } catch {}
+                  } catch {
+                    // ignore
+                  }
                 }
 
                 s.enemies.splice(i, 1);
@@ -605,20 +611,27 @@ export function CyberSpaceshipGame({ onClose }: CyberSpaceshipGameProps) {
   }, [playSound]);
 
   // Touch / Mobile Detection for Android
-  const [isTouch, setIsTouch] = useState(false);
-  useEffect(() => {
-    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
-  }, []);
+  const [isTouch] = useState(() => 
+    typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  );
 
   return (
     <div
       className={styles.gameContainer}
       ref={containerRef}
-      role="region"
+      role="button"
+      tabIndex={0}
       aria-label="Cyber Spaceship Combat Game"
       onClick={() => {
         if (stateRef.current.gameState !== "playing") {
           fireLaser();
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (stateRef.current.gameState !== "playing") {
+            fireLaser();
+          }
         }
       }}
     >
