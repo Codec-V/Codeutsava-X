@@ -13,7 +13,7 @@ class CyberSoundtrackEngine {
   private getAudio(): HTMLAudioElement | null {
     if (typeof window === 'undefined') return null;
     if (!this.audio) {
-      this.audio = new Audio('/the_mountain-glitch-hop-167617.mp3.mpeg');
+      this.audio = new Audio('/bgm.mp3');
       this.audio.loop = true;
       this.audio.volume = 0.2; // Set volume to 20%
     }
